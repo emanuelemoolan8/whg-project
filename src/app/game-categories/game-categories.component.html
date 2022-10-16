@@ -1,0 +1,27 @@
+<div style="flex-flow: row wrap;
+    box-sizing: border-box;
+    display: flex;
+    place-content: stretch space-between;
+    align-items: stretch;
+">
+    <ng-container>
+        <div class="flex-container "  *ngIf="this.gameList.length > 0; else noGames;">
+            <!-- <div > -->
+            <div class="game" *ngFor="let game of this.gameList">
+                <!-- <div>{{item.name}}</div>  -->
+                <mat-card>
+                    <mat-card-content>
+                        <img mat-card-image class="poster" [src]="game.image" alt="Game image">
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            </div>
+            <!-- </div> -->
+            <ng-template #noGames>
+                <div class="no-games-message" fxFlex fxLayout="column wrap" fxLayoutAlign="center center">
+                    <i class="icon material-icons">sentiment_very_dissatisfied</i>
+                    <h3 class="text">Sorry, there is no game at the moment within this category.</h3>
+                </div>
+            </ng-template>
+    </ng-container>
+</div>
