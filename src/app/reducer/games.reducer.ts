@@ -1,12 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import {
-  getJackpots,
-  getJackpotsSuccess,
-  getJackpotsFailure,
-  getGamesList,
-  getGamesListSuccess,
-  getGamesListFailure,
-} from '../actions/games.actions';
+import {GameActionsApi, GameActions} from '../actions'
 import { Games, Jackpots} from '../models/games.model';
 
 
@@ -22,13 +15,17 @@ export const initialState: State = {
 
 export const reducer = createReducer(
   initialState,
-  on(getGamesList, (state) => ({
-    ...state
+  on(GameActionsApi.getGamesList, (state) => ({
+    ...state,
   })),
-  on(getGamesListSuccess, (state, { games }) => ({
+  on(GameActions.getGamesListSuccess, (state, { games }) => ({
     ...state,
     gamesList: games,
   }))
 );
   
-export const getGames = ( state: State ) => state.gamesList;
+export const getGames = ( state: State ) =>
+{
+  console.log( state );
+  return state.gamesList;
+};

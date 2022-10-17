@@ -1,0 +1,31 @@
+<div style="height: 95vh;">
+    <mat-toolbar class="desktop-nav">
+        <mat-toolbar-row>
+            <mat-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+                <mat-icon>menu</mat-icon>
+            </mat-button>
+            <div class="mobileversionTitle" fxShow="true" fxHide.gt-sm>White Hat Gaming - EM</div>
+            <span class="menu-spacer"></span>
+            <div fxShow="true" fxHide.lt-md style="display: contents">
+                <mat-nav-list style="display:flex;width: 100%;" *ngFor="let item of this.menuItems">
+                    <a mat-list-item (click)="navigate(item.url, null)"
+                        [ngClass]="{selected: checkClickedItem(item.url)}">
+                        <div class="list-item">{{item.name}}</div>
+                    </a>
+                </mat-nav-list>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-sidenav-container fxFlexFill>
+        <mat-sidenav #sidenav>
+            <mat-nav-list *ngFor="let item of this.menuItems">
+                <a mat-list-item (click)="navigate(item.url,sidenav)" [ngClass]="{selected: checkClickedItem(item.url)}">
+                    {{item.name}} </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content fxFlexFill>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

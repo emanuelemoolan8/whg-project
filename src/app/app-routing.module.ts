@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GameCategoriesComponent } from './game-categories/game-categories.component';
+import { GameCategoriesComponent } from './components/game-categories/game-categories.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'top-games' },
@@ -52,7 +52,7 @@ const routes: Routes = [
   {
     path: 'others',
     component: GameCategoriesComponent,
-    data: { categories: ['ball', 'virtual', 'fun'] },
+    data: { categories: ['others'] },
   },
   { path: '**', pathMatch: 'full', redirectTo: 'top-games' },
 ];

@@ -1,0 +1,33 @@
+<div class="game-grid" fxLayout="row wrap" fxLayout.lt-sm="column wrap" fxLayoutAlign="space-between"  style="position: relative;top: 1em;"
+    fxLayoutAlign.lt-sm="center">
+    <ng-container>
+        <div class="flex-container "  *ngIf="this.gameList && gameList.length > 0; else noGames;">
+            <!-- <div > -->
+            <div class="game" fxFlex="18" fxFlex.lt-lg="33" fxFlex.lt-md="100" *ngFor="let game of this.gameList" style="max-width: max-content;">
+                <!-- <div>{{item.name}}</div>  -->
+                <mat-card class="game-content">
+                    <mat-card-content>
+                        <div class="badge badge_type_new badge_size_adaptive_recommended_new badge_with_shadow game-badges__sticky-badge" *ngIf="game.categories.includes('top')">TOP</div>
+                        <div class="ribbon green-ribbon" *ngIf="game.categories.includes('new')"><span>new</span></div>
+                        <span class="amount shadow" *ngIf="game.amount">
+                            <div>{{ game.amount | currency:'GBP':'symbol-narrow':'4.2-2' }}</div>
+                        </span>
+                        <img mat-card-image class="poster" [src]="game.image" alt="Game image not found" onerror="this.src='../../assets/noimage.png';" width="60%">
+                        <span class="name only-hover">{{ game.name }}</span>
+                        <span class="play only-hover">
+                            <i class="icon material-icons">play_arrow</i>
+                        </span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            </div>
+            <!-- </div> -->
+            <ng-template #noGames>
+                <div class="no-games-message" fxFlex fxLayout="column wrap" fxLayoutAlign="center center">
+                    <i class="icon material-icons">sentiment_very_dissatisfied</i>
+                    <h3 class="text">Sorry, there is no game at the moment within this category.</h3>
+                </div>
+            </ng-template>
+    </ng-container>
+</div>
+<div class="footer"></div>

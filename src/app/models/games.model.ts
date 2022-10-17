@@ -3,6 +3,7 @@ export interface Games {
   name: string;
   image: string;
   categories: string[];
+  amount?: number;
 }
 
 export interface Jackpots {

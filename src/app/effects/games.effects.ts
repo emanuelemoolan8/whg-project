@@ -3,16 +3,16 @@ import { exhaustMap, map, catchError, of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import {
-  getJackpots,
   getJackpotsSuccess,
   getJackpotsFailure,
-  getGamesList,
   getGamesListSuccess,
   getGamesListFailure,
 } from '../actions/games.actions';
 import { ConfigService } from '../services/config.service';
 import * as gameCategories from '../reducer/games.reducer';
-import { Games } from '../models/games.model';
+import { getGamesList } from '../actions/games.actions-api';
+import { GameActions}  from '../actions';
+
 
 @Injectable()
 export class GameEffects {
@@ -22,11 +22,13 @@ export class GameEffects {
       exhaustMap(() => {
         console.log('calling effects');
         return this.configService.getGamesList().pipe(
-          map( ( res:any ) =>
+          map( ( res ) =>
           {
             const games = res;
-            console.log(res)
-            return getGamesListSuccess({ games });
+            console.log( games );
+            console.log( 'calling success' );
+            
+            return GameActions.getGamesListSuccess({ games: games });
           }),
           catchError((error) => {
             console.log(error);
