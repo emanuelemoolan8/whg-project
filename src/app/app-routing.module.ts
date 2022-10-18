@@ -50,15 +50,30 @@ const routes: Routes = [
     data: { categories: ['poker'] },
   },
   {
-    path: 'others',
+    path: 'others/fun',
     component: GameCategoriesComponent,
-    data: { categories: ['others'] },
+    data: { categories: ['fun'] },
+  },
+  {
+    path: 'others/classic',
+    component: GameCategoriesComponent,
+    data: { categories: ['classic'] },
+  },
+  {
+    path: 'others/ball',
+    component: GameCategoriesComponent,
+    data: { categories: ['ball'] },
+  },
+  {
+    path: 'others/virtual',
+    component: GameCategoriesComponent,
+    data: { categories: ['virtual'] },
   },
   { path: '**', pathMatch: 'full', redirectTo: 'top-games' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

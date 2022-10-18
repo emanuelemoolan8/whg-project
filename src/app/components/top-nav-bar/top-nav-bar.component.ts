@@ -1,37 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { UtilService } from 'src/app/services/util.service';
+import { menuItems, othersMenuItems } from '../../constants/games.const';
 
 @Component({
   selector: 'app-top-nav-bar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './top-nav-bar.component.html',
   styleUrls: ['./top-nav-bar.component.scss'],
 })
 export class TopNavBarComponent {
-  constructor(private router: Router, private utilService: UtilService, private location: Location) {}
-  menuItems = this.utilService.menuItems();
-  clickedItem: String;
-  
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.clickedItem = this.location.path().substring(1);
-    console.log( window.location.href );
-    console.log(this.location.path().substring(1));
+  constructor(private router: Router, private location: Location) {}
+  menuItems = menuItems;
+  othersMenuItems = othersMenuItems;
+  clickedItem: string;
+  selectedOthersMenu: boolean = false;
+
+  ngOnInit (): void
+  {
+    this.clickedItem = this.getCategoryFromPath( this.location.path() );
+    this.selectedOthersMenu = this.checkSelectedItemInOthers( this.clickedItem );
   }
-  navigate(path: string, sidenav:any) {
-    this.router.navigate( [ path ] );
-    this.clickedItem = this.location.path();
-    console.log( path );
-    if ( sidenav )
-    {
+  navigate(path: string, sidenav: any): void {
+    this.router.navigate([path]);
+    this.clickedItem = path;
+    this.selectedOthersMenu = this.checkSelectedItemInOthers(path);
+    if (sidenav) {
       sidenav.toggle();
     }
   }
 
-  checkClickedItem (item:string)
-  {
-   return this.clickedItem === item;
-  }
+  checkClickedItem = (item: string) => this.clickedItem === item;
+
+  getCategoryFromPath = (path: string) => {
+    return ( path.charAt( 0 ) === '/' ) ?
+      path.substring( 1 ) : path;
+  };
+
+  checkSelectedItemInOthers = (path: string) =>
+    this.othersMenuItems.some((item) => item.url === path);
 }

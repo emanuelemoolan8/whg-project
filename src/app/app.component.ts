@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import * as gameCategories from '../app/reducer/games.reducer';
-import {GameActionsApi} from './actions';
 import { UtilService } from './services/util.service';
 @Component({
   selector: 'app-root',
@@ -9,7 +6,7 @@ import { UtilService } from './services/util.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'WHG-project';
+  title = 'WHG-Project-EM';
 
   constructor(private utilService: UtilService) {}
 

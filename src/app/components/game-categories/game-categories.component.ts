@@ -1,108 +1,59 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store,select, State } from '@ngrx/store';
-import { BehaviorSubject, interval, map, mergeMap, Observable, Subscription, switchMap, tap, withLatestFrom } from 'rxjs';
-import { APIResponse, Games, Jackpots } from '../../models/games.model';
-import { ConfigService } from '../../services/config.service';
-import * as gameCategories from '../../reducer/games.reducer';
-import * as gameSelector from '../../selectors/games.selectors';
-import * as GameActions from '../../actions/games.actions';
-import * as GameActionsApi from '../../actions/games.actions-api';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { categoryGames, Game, Jackpot } from '../../models/game-jackpot.model';
+import { ApiService } from '../../services/api.service';
 
 import { ActivatedRoute } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({
   selector: 'app-game-categories',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './game-categories.component.html',
   styleUrls: ['./game-categories.component.scss'],
 })
 export class GameCategoriesComponent implements OnInit, OnDestroy {
-  gamesListSubscription: Subscription;
-  jackpotSubscription: Subscription;
-  gameList: Array<Games>;
-  categorisedGames: Array<Games>;
-  jackpotList: Array<Jackpots>;
-
-  private currentCategories: string[] = [];
+  gamesSubscription: Subscription;
+  jackpotsSubscription: Subscription;
+  gameList: Array<Game>;
+  jackpotList: Array<Jackpot>;
 
   constructor(
-    private configService: ConfigService,
     private utilService: UtilService,
-
-    private store: Store<gameCategories.State>,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
-  gameCategories$: Observable<Games[]> = this.store.pipe(
-    select(gameSelector.getGames)
-  );
 
   ngOnInit(): void {
-    //this.getJackpots();
-    this.getGameList();
+    this.initJackpotsSubscription();
+    this.initGamesSubscription();
   }
 
-  getGameList() {
-    // this.gameList = this.utilService.games$.pipe(
-    //   map((games) =>
-    //     games.filter((game) =>
-    //       game.categories.some((category) =>
-    //         this.currentCategories.includes(category)
-    //       )
-    //     )
-    //   )
-    // );
-    const category = this.route.snapshot.data['categories'][0];
+  ngAfterViewInit() {
+    this.cdr.detach();
+  }
 
-    this.gamesListSubscription = this.utilService.games$.subscribe(
-      (e) => {
-        this.categorisedGames = e;
+  initGamesSubscription(): void {
+    const currentCategory = this.currentCategory();
+    this.gamesSubscription = this.utilService.games$.subscribe(
+      (games: categoryGames[]) => {
         this.gameList = this.utilService.getGamesByCategory(
-          this.categorisedGames, category
+          games,
+          currentCategory
         );
+        this.cdr.detectChanges();
       }
     );
-
-        this.jackpotSubscription = this.utilService.jackpots$.subscribe((e) => {
-          this.jackpotList = e;
-          this.addJackpots();
-        });
-
-    // this.jackpotSubscription = this.utilService.categories$.subscribe((e) => {
-    //   this.gameList = e;
-    // });
-    // this.store.dispatch(GameActionsApi.getGamesList());
-    // this.gamesListSubscription = this.configService
-    //   .getGamesList()
-    //   .subscribe((params) => {
-    //     this.gameList = params;
-    //     console.log(this.gameList);
-    //     this.selectGamesByCategory();
-    //   });
-    // this.getGamesListResponse();
   }
 
+  initJackpotsSubscription(): void {
+    this.jackpotsSubscription = this.utilService.jackpots$.subscribe((e) => {
+      this.jackpotList = e;
+      this.addJackpots();
+    });
+  }
 
-
-  // getGamesListResponse() {
-  //   this.gamesListSubscription = this.gameCategories$.subscribe((data: any) => {
-  //     if (data) {
-  //       this.jackpotList = data;
-  //       console.log(this.jackpotList);
-  //       this.selectGamesByCategory();
-  //     }
-  //   });
-  // }
-
-  // selectGamesByCategory() {
-  //   const category = this.route.snapshot.data['categories'][0];
-  //   this.gameList =
-  //     this.gameList &&
-  //     this.gameList.filter((item) => item.categories.includes(category));
-  //   console.log(this.gameList);
-  //   this.addJackpots();
-  // }
-
-  addJackpots() {
+  addJackpots(): void {
     this.gameList &&
       this.gameList.map((item) => {
         const foundItem =
@@ -111,14 +62,19 @@ export class GameCategoriesComponent implements OnInit, OnDestroy {
           item.amount = foundItem.amount;
         }
       });
+    this.cdr.detectChanges();
   }
 
-  ngOnDestroy() {
-    if (this.gamesListSubscription) {
-      this.gamesListSubscription.unsubscribe();
+  currentCategory(): string {
+    return this.route.snapshot.data['categories'][0];
+  }
+
+  ngOnDestroy(): void {
+    if (this.gamesSubscription) {
+      this.gamesSubscription.unsubscribe();
     }
-    if (this.jackpotSubscription) {
-      this.jackpotSubscription.unsubscribe();
+    if (this.jackpotsSubscription) {
+      this.jackpotsSubscription.unsubscribe();
     }
   }
 }

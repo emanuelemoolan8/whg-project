@@ -1,4 +1,4 @@
-export interface Games {
+export interface Game {
   id: string;
   name: string;
   image: string;
@@ -6,13 +6,14 @@ export interface Games {
   amount?: number;
 }
 
-export interface Jackpots {
+export interface Jackpot {
   game: string;
   amount: number;
 }
 
-export interface APIResponse<T>
+export interface categoryGames
 {
-  results: Array<T>;
+  category: string;
+  games: Game[];
 }
 

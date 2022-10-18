@@ -1,90 +1,54 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval, map, mergeMap } from 'rxjs';
-import { Games, Jackpots } from '../models/games.model';
-import { ConfigService } from './config.service';
+import { categoryGames, Game, Jackpot } from '../models/game-jackpot.model';
+import { ApiService } from './api.service';
+import { gameCategories, jackpotIntervalTime } from '../constants/games.const';
 
-@Injectable( {
+@Injectable({
   providedIn: 'root',
-} )
-export class UtilService
-{
-  categories = new Array<any>;
-  private gamesSource = new BehaviorSubject<Games[]>( [] );
+})
+export class UtilService {
+  categories = new Array<any>();
+  private gamesSource = new BehaviorSubject<categoryGames[]>([]);
   games$ = this.gamesSource.asObservable();
-  private jackpotsSource = new BehaviorSubject<Jackpots[]>( [] );
+  private jackpotsSource = new BehaviorSubject<Jackpot[]>([]);
   jackpots$ = this.jackpotsSource.asObservable();
 
-  constructor ( private configService: ConfigService ) { }
+  constructor(private apiService: ApiService) {}
 
-  getGameList ()
-  {
-    this.configService
-      .getGamesList()
-      .subscribe( ( params ) =>
-      {
-        const gameList = params;
-        this.selectGamesByCategory( gameList );
-      } );
+  getGameList() {
+    this.apiService.getGamesList().subscribe((games: Game[]) => {
+      this.selectGamesByCategory(games);
+    });
     this.getJackpots();
   }
 
-
-  selectGamesByCategory ( gameList: Games[] )
-  {
-    this.gameCategories().map( category =>
-    {
+  selectGamesByCategory(games: Game[]) {
+    gameCategories.map((category: string) => {
       const gameCategoryObj: any = new Object();
-      const categoryGames = gameList && gameList.filter( ( item ) => item.categories.includes( category ) );
-      gameCategoryObj[ 'category' ] = category;
-      gameCategoryObj[ 'games' ] = categoryGames;
-      this.categories.push( gameCategoryObj );
-
-    } );
-    this.gamesSource.next( this.categories );
-
+      const categoryGames =
+        games && games.filter((item) => item.categories.includes(category));
+      gameCategoryObj['category'] = category;
+      gameCategoryObj['games'] = categoryGames;
+      this.categories.push(gameCategoryObj);
+    });
+    this.gamesSource.next(this.categories);
   }
 
-  getGamesByCategory ( categorisedGames: any[], category: string )
-  {
-    const categoryGames = ( categorisedGames && categorisedGames.find( e => e.category === category ) );
-    if ( !categoryGames )
-    { return; }
-    return categoryGames.games;
+  getJackpots() {
+    interval(jackpotIntervalTime)
+      .pipe(mergeMap(() => this.apiService.getJackpotsList()))
+      .subscribe((data: any) => {
+        this.jackpotsSource.next(data);
+      });
   }
 
-
-  getJackpots ()
-  {
-    interval( 5 * 1000 )
-      .pipe(
-        mergeMap( () => this.configService.getJackpotsList() )
-      )
-      .subscribe( ( data: any ) =>
-      {
-        this.jackpotsSource.next( data );
-      } );
+  getGamesByCategory(categoryGames: categoryGames[], category: string) {
+    const categoryGamesArray: any =
+      categoryGames && categoryGames.find((item) => item.category === category);
+    if (!categoryGamesArray) {
+      return [];
+    }
+    return categoryGamesArray.games;
   }
-
-  menuItems ()
-  {
-    const list = [
-      { name: 'Top Games', url: 'top-games' },
-      { name: 'New Games', url: 'new-games' },
-      { name: 'Slots', url: 'slots' },
-      { name: 'Jackpots', url: 'jackpots' },
-      { name: 'Live', url: 'live' },
-      { name: 'Blackjack', url: 'blackjack' },
-      { name: 'Roulette', url: 'roulette' },
-      { name: 'Table', url: 'table' },
-      { name: 'Poker', url: 'poker' },
-      { name: 'Others', url: 'others' },
-    ];
-    return list;
-  }
-
-  gameCategories ()
-  {
-    return [ 'top', 'new', 'slots', 'jackpots', 'live', 'blackjack', 'roulette', 'table', 'poker', 'others' ];
-  }
-
 }

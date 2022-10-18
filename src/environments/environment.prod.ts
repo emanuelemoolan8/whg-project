@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  url: 'https://stage.whgstage.com/front-end-test',
+  production: true,
 };

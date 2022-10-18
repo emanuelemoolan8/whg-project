@@ -1,3 +1,7 @@
+.topNavbarContainer{
+height: 95vh;
+}
+
 mat-toolbar {
   mat-toolbar-row {
     padding: 0 35px;
@@ -100,4 +104,55 @@ mat-sidenav {
       }
     }
   }
+.dropdown:hover .dropdown-content {
+  display: flex;
+  min-width: 9.45vw;
+  position: fixed;
+}
+  
+}
+
+mat-select {
+  display: none;
+  width: auto;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--primary-color);;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 0px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  min-width: 9.45vw;
+}
+
+.dropdown:hover {
+  background-color: var(--accent-color);
+}
+
+.eachCategory{
+  height: 100%;
+  min-width: 9.45vw;
+  display: block;
 }
