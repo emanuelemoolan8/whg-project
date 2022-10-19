@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, map, mergeMap } from 'rxjs';
+import { BehaviorSubject, mergeMap, timer } from 'rxjs';
 import { categoryGames, Game, Jackpot } from '../models/game-jackpot.model';
 import { ApiService } from './api.service';
 import { gameCategories, jackpotIntervalTime } from '../constants/games.const';
@@ -36,7 +36,7 @@ export class UtilService {
   }
 
   getJackpots() {
-    interval(jackpotIntervalTime)
+    timer(0, jackpotIntervalTime)
       .pipe(mergeMap(() => this.apiService.getJackpotsList()))
       .subscribe((data: any) => {
         this.jackpotsSource.next(data);

@@ -16,10 +16,9 @@ export class TopNavBarComponent {
   clickedItem: string;
   selectedOthersMenu: boolean = false;
 
-  ngOnInit (): void
-  {
-    this.clickedItem = this.getCategoryFromPath( this.location.path() );
-    this.selectedOthersMenu = this.checkSelectedItemInOthers( this.clickedItem );
+  ngOnInit(): void {
+    this.clickedItem = this.getCategoryFromPath(this.location.path());
+    this.selectedOthersMenu = this.checkSelectedItemInOthers(this.clickedItem);
   }
   navigate(path: string, sidenav: any): void {
     this.router.navigate([path]);
@@ -33,8 +32,7 @@ export class TopNavBarComponent {
   checkClickedItem = (item: string) => this.clickedItem === item;
 
   getCategoryFromPath = (path: string) => {
-    return ( path.charAt( 0 ) === '/' ) ?
-      path.substring( 1 ) : path;
+    return path.charAt(0) === '/' ? path.substring(1) : path;
   };
 
   checkSelectedItemInOthers = (path: string) =>

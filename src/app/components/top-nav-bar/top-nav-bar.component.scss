@@ -1,5 +1,5 @@
-.topNavbarContainer{
-height: 95vh;
+.topNavbarContainer {
+  height: 95vh;
 }
 
 mat-toolbar {
@@ -12,6 +12,8 @@ mat-toolbar {
       font-size: medium;
       justify-content: space-around;
       align-items: center;
+      display: flex;
+      width: 100%;
 
       .mat-list-item {
         color: #FFFFFF;
@@ -78,6 +80,10 @@ mat-toolbar {
   opacity: 0.8;
 }
 
+.content-container {
+  display: contents
+}
+
 mat-button {
   background-color: var(--background);
   color: var(--white-color);
@@ -104,12 +110,13 @@ mat-sidenav {
       }
     }
   }
-.dropdown:hover .dropdown-content {
-  display: flex;
-  min-width: 9.45vw;
-  position: fixed;
-}
-  
+
+  .dropdown:hover .dropdown-content {
+    display: flex;
+    min-width: 9.45vw;
+    position: fixed;
+  }
+
 }
 
 mat-select {
@@ -125,7 +132,8 @@ mat-select {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: var(--primary-color);;
+  background-color: var(--primary-color);
+  ;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 20;
@@ -151,7 +159,7 @@ mat-select {
   background-color: var(--accent-color);
 }
 
-.eachCategory{
+.eachCategory {
   height: 100%;
   min-width: 9.45vw;
   display: block;

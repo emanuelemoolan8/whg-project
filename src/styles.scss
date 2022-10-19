@@ -1,7 +1,6 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
+@use '@angular/material'as mat;
 @import url('https://fonts.googleapis.com/css?family=Lato:400italic,700italic,400,700');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
@@ -23,13 +22,10 @@ $whg-project-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$whg-project-theme: mat.define-light-theme((
-  color: (
-    primary: $whg-project-primary,
-    accent: $whg-project-accent,
-    warn: $whg-project-warn,
-  )
-));
+$whg-project-theme: mat.define-light-theme((color: (primary: $whg-project-primary,
+      accent: $whg-project-accent,
+      warn: $whg-project-warn,
+    )));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -38,8 +34,15 @@ $whg-project-theme: mat.define-light-theme((
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 :root {
   --primary-color: #373737;

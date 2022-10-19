@@ -11,7 +11,7 @@ export const gameCategories: Array<string> = [
   'fun',
   'ball',
   'virtual',
-  'classic'
+  'classic',
 ];
 
 export const menuItems = [
@@ -33,4 +33,4 @@ export const othersMenuItems = [
   { name: 'Classic', url: 'others/classic' },
 ];
 
-export const jackpotIntervalTime = 5 * 1000; 
+export const jackpotIntervalTime = 3 * 1000;
