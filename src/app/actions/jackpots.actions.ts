@@ -8,8 +8,8 @@ export const getJackpotsListSuccess = createAction(
   '[Jackpots] Get Jackpots Success',
   props<{ jackpots: Jackpot[] }>()
 );
-// actions for response
 
+// actions for response
 export const getJackpotsListFailure = createAction(
   '[Jackpots] Get Jackpots Failure',
   props<{ error: any }>()

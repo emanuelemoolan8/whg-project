@@ -16,10 +16,9 @@ import { GameActions, JackpotActions } from '../actions';
 @Injectable({
   providedIn: 'root',
 })
-export class UtilService
-{
+export class UtilService {
   sortedGamesByCategory = new Array<categoryGames>();
-  constructor ( private store: Store<State> ) { }
+  constructor(private store: Store<State>) {}
 
   // api requests - games & jackpots
   getGames = () => this.store.dispatch(GameActions.getGamesList());
@@ -30,29 +29,27 @@ export class UtilService
     );
 
   // games functions
-  sortGamesByCategory = ( games: Game[] ) =>
-  {
+  sortGamesByCategory = (games: Game[]) => {
     // sorting games by category
-    gameCategories.map( ( category: string ) =>
-    {
+    gameCategories.map((category: string) => {
       const gameCategoryObj: any = new Object();
-      console.log('sorting')
-      const categoryGames = games && games.filter( ( item ) => item.categories.includes( category ) );
-      gameCategoryObj[ CATEGORY ] = category;
-      gameCategoryObj[ GAMES ] = categoryGames;
-      this.sortedGamesByCategory.push( gameCategoryObj );
-    } );
+      const categoryGames =
+        games && games.filter((item) => item.categories.includes(category));
+      gameCategoryObj[CATEGORY] = category;
+      gameCategoryObj[GAMES] = categoryGames;
+      this.sortedGamesByCategory.push(gameCategoryObj);
+    });
   };
 
-  currentCategoryGames = (category: string ) =>
-  {
+  currentCategoryGames = (category: string) => {
     const categoryGamesArray =
-      this.sortedGamesByCategory && this.sortedGamesByCategory.find((item) => item.category === category);
+      this.sortedGamesByCategory &&
+      this.sortedGamesByCategory.find((item) => item.category === category);
     if (!categoryGamesArray) {
       return [];
     }
     return categoryGamesArray.games;
-  }
+  };
 
   // jackpot functions
   generateJackpotsCategory = (jackpots: Jackpot[], games: Game[]) =>

@@ -8,10 +8,9 @@ import { UtilService } from './services/util.service';
 export class AppComponent {
   title = 'WHG-Project-EM';
 
-  constructor( private utilService: UtilService) {}
+  constructor(private utilService: UtilService) {}
 
-  ngOnInit (): void
-  {
+  ngOnInit(): void {
     this.utilService.getGames();
     this.utilService.getJackpots();
   }

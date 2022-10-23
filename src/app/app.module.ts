@@ -37,14 +37,8 @@ import { jackpotFeatureKey, jackpotReducer } from './reducer/jackpots.reducers';
     HttpClientModule,
     FlexLayoutModule,
     EffectsModule.forFeature([GameEffects, JackpotEffects]),
-    StoreModule.forFeature(
-      gameFeatureKey,
-      gameReducer
-    ),
-    StoreModule.forFeature(
-      jackpotFeatureKey,
-      jackpotReducer
-    ),
+    StoreModule.forFeature(gameFeatureKey, gameReducer),
+    StoreModule.forFeature(jackpotFeatureKey, jackpotReducer),
 
     StoreModule.forRoot(gameReducer, {
       runtimeChecks: {

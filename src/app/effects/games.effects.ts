@@ -12,16 +12,19 @@ export class GameEffects {
       ofType(GameActions.getGamesList),
       exhaustMap(() => {
         return this.apiService.getGamesList().pipe(
-          map( ( result ) =>
-          {
+          map((result) => {
             this.utilService.sortGamesByCategory(result);
-            return GameActions.getGamesListSuccess( { games: result } );
-          } ),
+            return GameActions.getGamesListSuccess({ games: result });
+          }),
           catchError((error) => of(GameActions.getGamesListFailure({ error })))
         );
       })
     )
   );
 
-  constructor(private actions$: Actions, private apiService: ApiService, private utilService: UtilService) {}
+  constructor(
+    private actions$: Actions,
+    private apiService: ApiService,
+    private utilService: UtilService
+  ) {}
 }
