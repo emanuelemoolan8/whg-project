@@ -2,7 +2,7 @@
     fxLayoutAlign.lt-sm="center">
     <ng-container>
         <div class="flex-container " *ngIf="this.gameList && gameList.length > 0; else noGames;">
-            <div class="game" fxFlex="18" fxFlex.lt-lg="33" fxFlex.lt-md="100" *ngFor="let game of this.gameList">
+            <div class="game" fxFlex="18" fxFlex.lt-lg="33" fxFlex.lt-md="100" *ngFor="let game of this.currentCategoryGames">
                 <mat-card class="game-content">
                     <mat-card-content>
                         <!-- top badge -->
@@ -28,10 +28,7 @@
         </div>
         <!-- No game messgae -->
         <ng-template #noGames>
-            <div class="no-games-message" fxFlex fxLayout="column wrap" fxLayoutAlign="center center">
-                <i class="icon material-icons">tv_off</i>
-                <h3 class="text">There are no game available in this category. Please try again later</h3>
-            </div>
+            <div class="no-games-message" fxFlex fxLayout="column wrap" fxLayoutAlign="center center"></div>
         </ng-template>
     </ng-container>
 </div>

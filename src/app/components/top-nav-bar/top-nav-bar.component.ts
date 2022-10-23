@@ -20,6 +20,7 @@ export class TopNavBarComponent {
     this.clickedItem = this.getCategoryFromPath(this.location.path());
     this.selectedOthersMenu = this.checkSelectedItemInOthers(this.clickedItem);
   }
+
   navigate(path: string, sidenav: any): void {
     this.router.navigate([path]);
     this.clickedItem = path;

@@ -5,12 +5,16 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { categoryGames, Game, Jackpot } from '../../models/game-jackpot.model';
-import { ApiService } from '../../services/api.service';
+import { Observable, Subscription } from 'rxjs';
+import { Game, Jackpot } from '../../models/game-jackpot.model';
 
 import { ActivatedRoute } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
+import { select, Store } from '@ngrx/store';
+import { selectGames } from 'src/app/selectors/games.selectors';
+import { State } from 'src/app/reducer/games.reducers';
+import { selectJackpots } from 'src/app/selectors/jackpots.selectors';
+import { CATEGORY, JACKPOTS } from 'src/app/constants/games.const';
 
 @Component({
   selector: 'app-game-categories',
@@ -19,19 +23,22 @@ import { UtilService } from 'src/app/services/util.service';
   styleUrls: ['./game-categories.component.scss'],
 })
 export class GameCategoriesComponent implements OnInit, OnDestroy {
-  gamesSubscription: Subscription;
-  jackpotsSubscription: Subscription;
+  subscriptions: Array<Subscription> = [];
   gameList: Array<Game>;
-  jackpotList: Array<Jackpot>;
+  currentCategoryGames: Array<Game>;
+  games$: Observable<Array<Game>> = this.store.pipe(select(selectGames));
+  jackpots$: Observable<Array<Jackpot>> = this.store.pipe(
+    select(selectJackpots)
+  );
 
   constructor(
     private utilService: UtilService,
     private route: ActivatedRoute,
+    private store: Store<State>,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.initJackpotsSubscription();
     this.initGamesSubscription();
   }
 
@@ -40,47 +47,34 @@ export class GameCategoriesComponent implements OnInit, OnDestroy {
   }
 
   initGamesSubscription(): void {
-    const currentCategory = this.currentCategory();
-    this.gamesSubscription = this.utilService.games$.subscribe(
-      (games: categoryGames[]) => {
-        this.gameList = this.utilService.getGamesByCategory(
-          games,
-          currentCategory
+    this.subscriptions.push(
+      this.games$.subscribe((games: Game[]) => {
+        this.gameList = games;
+        this.currentCategoryGames = this.utilService.currentCategoryGames(
+          this.currentCategory()
         );
+        this.initJackpotsSubscription();
         this.cdr.detectChanges();
-      }
+      })
     );
   }
 
   initJackpotsSubscription(): void {
-    this.jackpotsSubscription = this.utilService.jackpots$.subscribe((e) => {
-      this.jackpotList = e;
-      this.addJackpots();
-    });
+    this.subscriptions.push(
+      this.jackpots$.subscribe((jackpots) => {
+        this.currentCategoryGames =
+          this.currentCategory() === JACKPOTS
+            ? this.utilService.generateJackpotsCategory(jackpots, this.gameList)
+            : this.utilService.addJackpots(jackpots, this.currentCategoryGames);
+        this.cdr.detectChanges();
+      })
+    );
   }
 
-  addJackpots(): void {
-    this.gameList &&
-      this.gameList.map((item) => {
-        const foundItem =
-          this.jackpotList && this.jackpotList.find((e) => e.game === item.id);
-        if (foundItem) {
-          item.amount = foundItem.amount;
-        }
-      });
-    this.cdr.detectChanges();
-  }
-
-  currentCategory(): string {
-    return this.route.snapshot.data['categories'][0];
-  }
+  currentCategory = (): string => this.route.snapshot.data[CATEGORY];
 
   ngOnDestroy(): void {
-    if (this.gamesSubscription) {
-      this.gamesSubscription.unsubscribe();
-    }
-    if (this.jackpotsSubscription) {
-      this.jackpotsSubscription.unsubscribe();
-    }
+    // prevent memory leak when component destroyed
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

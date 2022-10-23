@@ -1,54 +1,75 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, mergeMap, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { categoryGames, Game, Jackpot } from '../models/game-jackpot.model';
-import { ApiService } from './api.service';
-import { gameCategories, jackpotIntervalTime } from '../constants/games.const';
+import {
+  CATEGORY,
+  gameCategories,
+  GAMES,
+  INTERVAL_TIME,
+  JACKPOTS,
+} from '../constants/games.const';
+import { select, Store } from '@ngrx/store';
+import { State } from '../reducer/games.reducers';
+import { selectJackpots } from '../selectors/jackpots.selectors';
+import { GameActions, JackpotActions } from '../actions';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UtilService {
-  categories = new Array<any>();
-  private gamesSource = new BehaviorSubject<categoryGames[]>([]);
-  games$ = this.gamesSource.asObservable();
-  private jackpotsSource = new BehaviorSubject<Jackpot[]>([]);
-  jackpots$ = this.jackpotsSource.asObservable();
+export class UtilService
+{
+  sortedGamesByCategory = new Array<categoryGames>();
+  constructor ( private store: Store<State> ) { }
 
-  constructor(private apiService: ApiService) {}
+  // api requests - games & jackpots
+  getGames = () => this.store.dispatch(GameActions.getGamesList());
 
-  getGameList() {
-    this.apiService.getGamesList().subscribe((games: Game[]) => {
-      this.selectGamesByCategory(games);
-    });
-    this.getJackpots();
-  }
+  getJackpots = () =>
+    timer(0, INTERVAL_TIME).subscribe(() =>
+      this.store.dispatch(JackpotActions.getJackpotsList())
+    );
 
-  selectGamesByCategory(games: Game[]) {
-    gameCategories.map((category: string) => {
+  // games functions
+  sortGamesByCategory = ( games: Game[] ) =>
+  {
+    // sorting games by category
+    gameCategories.map( ( category: string ) =>
+    {
       const gameCategoryObj: any = new Object();
-      const categoryGames =
-        games && games.filter((item) => item.categories.includes(category));
-      gameCategoryObj['category'] = category;
-      gameCategoryObj['games'] = categoryGames;
-      this.categories.push(gameCategoryObj);
-    });
-    this.gamesSource.next(this.categories);
-  }
+      console.log('sorting')
+      const categoryGames = games && games.filter( ( item ) => item.categories.includes( category ) );
+      gameCategoryObj[ CATEGORY ] = category;
+      gameCategoryObj[ GAMES ] = categoryGames;
+      this.sortedGamesByCategory.push( gameCategoryObj );
+    } );
+  };
 
-  getJackpots() {
-    timer(0, jackpotIntervalTime)
-      .pipe(mergeMap(() => this.apiService.getJackpotsList()))
-      .subscribe((data: any) => {
-        this.jackpotsSource.next(data);
-      });
-  }
-
-  getGamesByCategory(categoryGames: categoryGames[], category: string) {
-    const categoryGamesArray: any =
-      categoryGames && categoryGames.find((item) => item.category === category);
+  currentCategoryGames = (category: string ) =>
+  {
+    const categoryGamesArray =
+      this.sortedGamesByCategory && this.sortedGamesByCategory.find((item) => item.category === category);
     if (!categoryGamesArray) {
       return [];
     }
     return categoryGamesArray.games;
+  }
+
+  // jackpot functions
+  generateJackpotsCategory = (jackpots: Jackpot[], games: Game[]) =>
+    this.addJackpots(jackpots, games).filter((game) =>
+      game.categories.includes(JACKPOTS)
+    );
+
+  addJackpots(jackpots: Jackpot[], games: Game[]) {
+    games &&
+      games.map((game) => {
+        const foundItem =
+          jackpots && jackpots.find((jackpot) => jackpot.game === game.id);
+        if (foundItem) {
+          game.amount = foundItem.amount;
+          !game.categories.includes(JACKPOTS) && game.categories.push(JACKPOTS);
+        }
+      });
+    return games;
   }
 }

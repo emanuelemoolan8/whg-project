@@ -24,8 +24,6 @@
   }
 }
 
-
-
 .game-grid {
   margin: 0 auto;
   max-width: var(--dashboard-max-width);
@@ -37,7 +35,7 @@
     user-select: none;
     background-color: var(--white-color);
     width: max-content;
-    margin: 10px;
+    margin: 18px 10px;
     text-align: center;
     font-size: 30px;
     border-radius: 10px;
@@ -58,13 +56,7 @@
 
       &:hover {
         .only-hover {
-          line-height: var(--game-name-font-size);
-          height: var(--game-name-font-size);
-
-          &.play {
-            line-height: var(--play-icon-font-size);
-            height: var(--play-icon-font-size);
-          }
+          display: inline;
         }
       }
 
@@ -72,15 +64,15 @@
         width: 200px;
         height: 300px;
         position: relative;
-        border: 1px solid #BBB;
-        background: #eee;
+        border: 1px solid #bbb;
+        background: var(--white-color);
       }
 
       .ribbon {
         position: absolute;
         right: -5px;
         top: -5px;
-        z-index: 3;
+        z-index: 2;
         overflow: hidden;
         width: 75px;
         height: 75px;
@@ -99,8 +91,8 @@
         /* Needed for Safari */
         width: 100px;
         display: block;
-        background: #79A70A;
-        background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+        background: var(--green-color);
+        background: linear-gradient(#9bc90d 0%, #79a70a 100%);
         box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
         position: absolute;
         top: 19px;
@@ -113,7 +105,7 @@
       }
 
       .badge_type_new {
-        background-color: #ffc01f;
+        background-color: var(--orange-color);
         background: linear-gradient(#f2b927 0%, #dc8102 100%);
         color: var(--white-color);
       }
@@ -138,11 +130,11 @@
         margin-right: 8px;
         position: absolute;
         top: 20px;
-        z-index: 3;
+        z-index: 2;
       }
 
       .amount {
-        z-index: 3;
+        z-index: 2;
         line-height: var(--game-name-font-size);
         font-size: var(--font-pounds);
         color: var(--white-color);
@@ -155,7 +147,7 @@
         height: var(--game-name-font-size);
         border-top-right-radius: var(--border-radius-game);
         border-top-left-radius: var(--border-radius-game);
-        background-color: #000000b0;
+        background-color: var(--light-shadow-color);
       }
 
       .shadow,
@@ -164,11 +156,8 @@
       .play {
         position: absolute;
         top: 16px;
-        left: 50%;
-        right: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
-        transition: var(--normal-transition);
         cursor: pointer;
       }
 
@@ -178,12 +167,6 @@
         border-radius: 10px;
         box-shadow: var(--box-shadow-card);
         transition: var(--normal-transition);
-      }
-
-      .only-hover {
-        height: 0rem;
-        line-height: 0rem;
-        overflow: hidden;
       }
     }
   }
@@ -198,37 +181,40 @@
 
     .text {
       font-size: 1.5rem;
-      opacity: 0.75;
+      opacity: 1;
       padding: 25px;
       text-align: center;
     }
   }
 }
 
-
 .game-grid {
   .game {
     .game-content {
       .name {
-        top: initial;
+        top: 90%;
         bottom: 0;
-        z-index: 20;
-        line-height: var(--game-name-font-size);
+        z-index: 3;
+        // line-height: 2.5em;
         font-size: var(--font-pounds);
         color: var(--white-color);
         font-weight: bold;
         text-transform: uppercase;
         text-align: center;
-        text-shadow: 1px 1px 10px var(--shadow-color), 2px 2px 10px var(--shadow-color);
+        background-color: var(--light-shadow-color);
+        height: 1.5em;
+        display: none;
+        text-shadow: 2px 0px 4px var(--shadow-color), 2px 2px 5px var(--shadow-color);
       }
 
       .play {
         top: 50%;
-        z-index: 20;
+        z-index: 3;
         color: var(--white-color);
         text-align: center;
         text-shadow: 1px 1px 10px var(--shadow-color), 2px 2px 10px var(--shadow-color);
         opacity: 0.8;
+        display: none;
 
         .icon {
           font-size: var(--play-icon-font-size);

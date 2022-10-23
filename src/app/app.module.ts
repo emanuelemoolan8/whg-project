@@ -17,6 +17,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { HttpErrorsInterceptor } from './interceptors/https-errors.interceptor';
+import { GameEffects } from './effects/games.effects';
+import { gameFeatureKey, gameReducer } from './reducer/games.reducers';
+import { JackpotEffects } from './effects/jackpots.effects';
+import { jackpotFeatureKey, jackpotReducer } from './reducer/jackpots.reducers';
 
 @NgModule({
   declarations: [AppComponent, TopNavBarComponent, GameCategoriesComponent],
@@ -32,8 +36,22 @@ import { HttpErrorsInterceptor } from './interceptors/https-errors.interceptor';
     BrowserAnimationsModule,
     HttpClientModule,
     FlexLayoutModule,
-    EffectsModule.forFeature([]),
-    StoreModule.forRoot({}, {}),
+    EffectsModule.forFeature([GameEffects, JackpotEffects]),
+    StoreModule.forFeature(
+      gameFeatureKey,
+      gameReducer
+    ),
+    StoreModule.forFeature(
+      jackpotFeatureKey,
+      jackpotReducer
+    ),
+
+    StoreModule.forRoot(gameReducer, {
+      runtimeChecks: {
+        strictStateImmutability: false,
+        strictActionImmutability: false,
+      },
+    }),
     EffectsModule.forRoot([]),
   ],
   providers: [
